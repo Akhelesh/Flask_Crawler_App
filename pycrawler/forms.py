@@ -6,8 +6,6 @@ from wtforms.validators import DataRequired, ValidationError
 
 
 class SubmitDomainForm(FlaskForm):
-    crawler_name = StringField('Crawler Name',
-                               validators=[DataRequired()])
     domain = StringField('Domain', validators=[DataRequired()])
     submit = SubmitField('Crawl')
 
@@ -18,8 +16,9 @@ class SubmitDomainForm(FlaskForm):
             url = regex.match(domain.data).group()
             parsed_url = urlparse(url)
             if parsed_url.netloc:
-                domain.data = 'http://' + parsed_url.netloc
+                domain.data = 'http://' + parsed_url.netloc + '/'
             else:
-                domain.data = 'http://' + parsed_url.path.split('/')[0]
+                domain.data = 'http://' + parsed_url.path.split('/')[0]\
+                              + '/'
         except AttributeError:
             raise ValidationError('Please enter a valid URL.')

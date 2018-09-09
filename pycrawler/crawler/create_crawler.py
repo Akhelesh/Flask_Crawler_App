@@ -1,15 +1,18 @@
 import threading
 from queue import Queue
+from pycrawler import db
+from pycrawler.models import Domain
 from pycrawler.crawler.util import *
 from pycrawler.crawler.crawler import Crawler
 
 
 class CreateCrawler:
-    NUMBER_OF_THREADS = 5
+    NUMBER_OF_THREADS = 4
 
     def __init__(self, domain, name):
         self.crawler = Crawler(domain, name)
         self.queue = Queue()
+        self.finished = False
 
     def create_threads(self):
         for _ in range(CreateCrawler.NUMBER_OF_THREADS):
@@ -28,9 +31,16 @@ class CreateCrawler:
             if link:
                 self.queue.put(link)
         self.queue.join()
-        self.run_crawl()
 
     def run_crawl(self):
         queue_links = get_links_from_file(self.crawler.queue_file)
-        if len(queue_links) > 0:
+        while len(queue_links) > 0:
             self.populate_queue()
+            queue_links = get_links_from_file(self.crawler.queue_file)
+        self.finished = True
+
+    def add_to_database(self):
+        domain = Domain(domain_name=self.crawler.name,
+                        url=self.crawler.domain)
+        db.session.add(domain)
+        db.session.commit()
