@@ -1,23 +1,21 @@
 import os
+from pycrawler import app
 
 
-# def parse_url(url):
-#         if 'http' in url:
-#             return url.split('#')[0]
-#         else:
-#             return None
+DATA_DIR_PATH = os.path.join(os.path.dirname(app.instance_path),
+                        'pycrawler', 'data')
 
 
 def create_dir(dir_name):
-    path = os.path.join('data', dir_name)
+    path = os.path.join(DATA_DIR_PATH, dir_name)
     if not os.path.exists(path):
         os.makedirs(path)
 
 
 def create_files(dir_name, base_url):
-    queue_file = os.path.join('data', dir_name, 'queue.txt')
-    crawled_file = os.path.join('data', dir_name, 'crawled.txt')
-    external_file = os.path.join('data', dir_name, 'external.txt')
+    queue_file = os.path.join(DATA_DIR_PATH, dir_name, 'queue.txt')
+    crawled_file = os.path.join(DATA_DIR_PATH, dir_name, 'crawled.txt')
+    external_file = os.path.join(DATA_DIR_PATH, dir_name, 'external.txt')
     if not os.path.exists(queue_file):
         write_to_file(queue_file, base_url)
     if not os.path.exists(crawled_file):
@@ -33,7 +31,7 @@ def write_to_file(file, data):
 
 def get_links_from_file(file):
     links = set()
-    path = os.path.join('data', file)
+    path = os.path.join(DATA_DIR_PATH, file)
     with open(path, 'r') as f:
         for link in f:
             if link:
@@ -42,7 +40,7 @@ def get_links_from_file(file):
 
 
 def save_links_to_file(file, links):
-    path = os.path.join('data', file)
+    path = os.path.join(DATA_DIR_PATH, file)
     with open(path, 'w') as f:
         for link in links:
             if link:

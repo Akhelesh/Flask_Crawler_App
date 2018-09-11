@@ -1,7 +1,6 @@
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
-from pycrawler import db
-from run import app
+from pycrawler import app, db
 
 
 migrate = Migrate(app, db)

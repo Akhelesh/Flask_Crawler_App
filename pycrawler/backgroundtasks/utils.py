@@ -1,11 +1,11 @@
 from flask import render_template, url_for
 from flask_mail import Message
-from pycrawler import mail, create_app
+from pycrawler import mail, app
 
 
 def send_email(email, name):
     print(name)
-    with create_app().test_request_context():
+    with app.test_request_context():
         msg = Message('Crawl Complete View the Results',
                       sender='noreply@pycrawler.com',
                       recipients=[email])
