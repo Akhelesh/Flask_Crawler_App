@@ -8,6 +8,8 @@ from celery import Celery
 
 
 app = Flask(__name__)
+app.config.from_object(os.environ['APP_CONFIG'])
+
 bcrypt = Bcrypt(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -18,8 +20,6 @@ mail = Mail(app)
 
 celery = Celery(__name__)
 celery.config_from_object(os.environ['APP_SETTINGS'] + '.CeleryConfig')
-
-app.config.from_object(os.environ['APP_SETTINGS'] + '.DevelopmentConfig')
 
 
 from pycrawler.main.routes import main
