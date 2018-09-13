@@ -1,9 +1,9 @@
 import os
+import sendgrid
+from sendgrid.helpers.mail import *
 import secrets
 from PIL import Image
 from flask import url_for, current_app
-from flask_mail import Message
-from pycrawler import mail
 
 
 def save_picture(form_picture):
@@ -22,12 +22,14 @@ def save_picture(form_picture):
 
 def send_reset_email(user):
     token = user.get_reset_token()
-    msg = Message('Password Reset Request',
-                  sender='noreply@demo.com',
-                  recipients=[user.email])
-    msg.body = f'''To reset your password visit the following link:
-{url_for('users.reset_token', token=token, _external=True)}
+    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+    from_email = Email("noreply@pycrawler.com")
+    subject = 'Password Reset Request'
+    to_email = Email(user.email)
+    url = url_for('users.reset_token', token=token, _external=True)
+    content = Content("text/plain", 'To reset your password visit the following link:' +
+                      url + '''
+                         If you did not make this request please ignore this email.''')
 
-If you did not make this request please ignore this email.
-'''
-    mail.send(msg)
+    mail = Mail(from_email, subject, to_email, content)
+    sg.client.mail.send.post(request_body=mail.get())
