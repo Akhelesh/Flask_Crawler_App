@@ -24,7 +24,6 @@ class Crawler:
 
     def crawl(self, url):
         if url not in self.crawled and self.verify_domain(url):
-            print('Crawler instance - currently @', url)
             try:
                 page_getter = GetPage(url)
                 page_getter.get()
@@ -37,8 +36,11 @@ class Crawler:
                 self.update_files()
             except Exception as e:
                 print(e)
-                self.queue.remove(url)
-                self.update_files()
+                try:
+                    self.queue.remove(url)
+                    self.update_files()
+                except KeyError:
+                    pass
 
     def update_files(self):
         save_links_to_file(self.queue_file, self.queue)

@@ -42,6 +42,6 @@ def get_links_from_file(file):
 def save_links_to_file(file, links):
     path = os.path.join(DATA_DIR_PATH, file)
     with open(path, 'w') as f:
-        for link in links:
+        for link in links.copy():
             if link:
                 f.write(link + "\n")

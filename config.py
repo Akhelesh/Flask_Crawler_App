@@ -21,4 +21,4 @@ class ProductionConfig(Config):
 
 
 class CeleryConfig:
-    broker_url = os.environ.get('REDIS_URL')
+    broker_url = os.environ.get('CLOUDAMQP_URL')
