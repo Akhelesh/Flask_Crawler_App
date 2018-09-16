@@ -1,1 +1,2 @@
-web: sh ./scripts/heroku.sh
+web: gunicorn run:app
+worker: celery worker -A pycrawler.backgroundtasks.celery.celery --loglevel=info
