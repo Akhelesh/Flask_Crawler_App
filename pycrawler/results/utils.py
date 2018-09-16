@@ -4,11 +4,10 @@ from flask import current_app
 
 
 def get_links(domain_name):
-    path = os.path.join(os.path.dirname(current_app.instance_path),
-                        'pycrawler', 'data', domain_name)
+    path = os.path.join('data', domain_name)
     crawled_links = []
     external_links = []
-
+    print(path)
     with open(path + '/crawled.txt', 'r') as f:
         for l in f:
             if l:

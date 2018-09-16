@@ -3,8 +3,7 @@ from flask import flash, url_for, redirect, render_template, Blueprint
 from flask_login import current_user
 from pycrawler.forms import SubmitDomainForm
 from pycrawler.models import Domain
-from pycrawler.backgroundtasks.tasks import (TIME_PERIOD, run_crawler,
-                                             keep_heroku_alive)
+from pycrawler.backgroundtasks.tasks import run_crawler
 
 main = Blueprint('main', __name__)
 
@@ -30,6 +29,5 @@ def home():
               'when the crawl is complete.', 'info')
         run_crawler.delay(current_user.email, form.domain.data,
                           extract(form.domain.data).domain.lower())
-        keep_heroku_alive.delay(TIME_PERIOD)
     return render_template('home.html', title='Crawler', form=form,
                            legend='Enter a Domain to Crawl')
