@@ -40,6 +40,8 @@ class Domain(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     domain_name = db.Column(db.String(), nullable=False, unique=True)
     url = db.Column(db.String(), nullable=False, unique=True)
+    internal_links = db.Column(db.Text, nullable=False)
+    external_links = db.Column(db.Text, nullable=False)
 
     def __repr__(self):
         return f"Domain('{self.domain_name}', '{self.url}')"
