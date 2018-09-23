@@ -47,3 +47,8 @@ def save_links_to_file(file, links):
         for link in links.copy():
             if link:
                 f.write(link + "\n")
+
+
+def get_text_from_file(file):
+    with open(file, 'r') as f:
+        return f.read()

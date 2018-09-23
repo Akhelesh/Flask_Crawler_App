@@ -1,3 +1,4 @@
+import os
 import time
 import threading
 from queue import Queue
@@ -47,8 +48,14 @@ class CreateCrawler:
         self.finished = True
 
     def add_to_database(self):
+        f_internal = os.path.join('data', self.crawler.name,
+                                  'crawled.txt')
+        f_external = f_internal.replace('crawled',
+                                        'external')
         domain = Domain(domain_name=self.crawler.name,
-                        url=self.crawler.domain)
+                        url=self.crawler.domain,
+                        internal_links=get_text_from_file(f_internal),
+                        external_links=get_text_from_file(f_external))
         db.session.add(domain)
         db.session.commit()
 
@@ -58,4 +65,3 @@ class CreateCrawler:
                 print('__KEEP ALIVE REQUEST__')
                 time.sleep(self.heroku_request_sleep_time)
                 requests.get('https://pycrawler.herokuapp.com/')
-

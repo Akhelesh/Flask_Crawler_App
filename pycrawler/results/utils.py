@@ -1,31 +1,24 @@
-import os
 import tldextract
-from flask import current_app
+from pycrawler.models import Domain
 
 
 def get_links(domain_name):
-    path = os.path.join('data', domain_name)
-    crawled_links = []
-    external_links = []
-    print(path)
-    with open(path + '/crawled.txt', 'r') as f:
-        for l in f:
-            if l:
-                crawled_links.append(l)
-
-    with open(path + '/external.txt', 'r') as f:
-        for l in f:
-            if l:
-                external_links.append(l)
-
-    return crawled_links, external_links
+    domain = Domain.query.filter_by(domain_name=domain_name).first()
+    return (domain.internal_links.split('\n'),
+            domain.external_links.split('\n'))
 
 
 def get_unique_domains(links):
     unique_domains = dict()
     for l in links:
         domain = tldextract.extract(l)
-        if domain not in unique_domains:
-            unique_domains[domain.domain] = 'http://' + domain.subdomain\
-                + '.' + domain.domain + '.' + domain.suffix
+        domain_name = domain.domain
+        subdomain = domain.subdomain
+        suffix = domain.suffix
+        if domain_name not in unique_domains:
+            unique_domains[domain_name] = 'http://'
+            if subdomain:
+                unique_domains[domain.domain] += domain.subdomain + '.'
+            unique_domains[domain_name] += domain_name + '.' + suffix
+
     return unique_domains
