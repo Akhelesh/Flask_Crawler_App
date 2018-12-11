@@ -2,7 +2,7 @@ import time
 import requests
 from celery.exceptions import SoftTimeLimitExceeded
 from pycrawler.crawler.create_crawler import CreateCrawler
-from pycrawler import celery
+from .celery import celery
 from .utils import send_email
 
 

@@ -1,6 +1,5 @@
 from tldextract import extract
 from pycrawler.crawler.util import *
-from pycrawler.crawler.get_page import GetPage
 
 
 class Crawler:
@@ -25,9 +24,7 @@ class Crawler:
     def crawl(self, url):
         if url not in self.crawled and self.verify_domain(url):
             try:
-                page_getter = GetPage(url)
-                page_getter.get()
-                links = set(page_getter.links)
+                links = get_page(url)
                 links = self.parse_urls(links)
                 self.add_links_to_queue(links)
                 self.get_external_links(links)
@@ -49,8 +46,8 @@ class Crawler:
 
     def add_links_to_queue(self, links):
         for l in links:
-            if (l in self.crawled) or (l in self.queue)\
-            or (not self.verify_domain(l)):
+            if ((l in self.crawled) or (l in self.queue) or
+               (not self.verify_domain(l))):
                 continue
             self.queue.add(l)
 
